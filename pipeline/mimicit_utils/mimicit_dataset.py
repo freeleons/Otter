@@ -6,7 +6,6 @@
 import base64
 import contextlib
 import os
-import random
 import re
 import sys
 from io import BytesIO
@@ -20,6 +19,7 @@ from torch.utils.data import Dataset
 from torchvision import transforms
 from transformers import AutoProcessor
 import wandb
+import secrets
 
 IMAGENET_DEFAULT_MEAN = (0.485, 0.456, 0.406)
 IMAGENET_DEFAULT_STD = (0.229, 0.224, 0.225)
@@ -48,14 +48,14 @@ def random_seed(seed, *addl_seeds):
     if len(addl_seeds) > 0:
         seed = int(hash((seed, *addl_seeds)) % 1e6)
     numpy_state = np.random.get_state()
-    random_state = random.getstate()
+    random_state = secrets.SystemRandom().getstate()
     np.random.seed(seed)
-    random.seed(seed)
+    secrets.SystemRandom().seed(seed)
     try:
         yield
     finally:
         np.random.set_state(numpy_state)
-        random.setstate(random_state)
+        secrets.SystemRandom().setstate(random_state)
 
 
 import numpy as np
@@ -77,14 +77,14 @@ def resample_data(data, N):
         upsampled_data = data * repeat_times
 
         # Add the remainder of the items by randomly sampling
-        random.seed(0)
-        upsampled_data += random.choices(data, k=remainder)
+        secrets.SystemRandom().seed(0)
+        upsampled_data += secrets.SystemRandom().choices(data, k=remainder)
 
         return upsampled_data
     # Downsample if N is smaller than the list length
     else:
-        random.seed(0)
-        return random.sample(data, N)
+        secrets.SystemRandom().seed(0)
+        return secrets.SystemRandom().sample(data, N)
 
 
 def extract_rgb_number(path):
@@ -265,7 +265,7 @@ class MimicitDataset(Dataset):
             return question
 
         first_letter = question[0]
-        if random.choice([True, False]):
+        if secrets.SystemRandom().choice([True, False]):
             first_letter = first_letter.upper()
         else:
             first_letter = first_letter.lower()
@@ -400,7 +400,7 @@ class MimicitDataset(Dataset):
 
         cur_task_desc = self.task_description[self.task_mapping[cur_train_id]]
         if len(cur_task_desc) > 0:
-            cur_task_desc = random.choice(cur_task_desc)
+            cur_task_desc = secrets.SystemRandom().choice(cur_task_desc)
 
         process_mapping = {
             "VIDEO_TEXT": "process_general_videoqa",
@@ -495,7 +495,7 @@ class MimicitDataset(Dataset):
 
 def prepare_fuyu(args, fuyu_processor, batch_data, resolution):
     if args.dynamic_resolution:
-        resolution = random.choice([(448, 448), (512, 512), (768, 768)])
+        resolution = secrets.SystemRandom().choice([(448, 448), (512, 512), (768, 768)])
     pil_images = [img[0].resize(resolution) for img in batch_data["pil_images"] if img is not None]
     model_inputs = fuyu_processor(text=batch_data["full_text"], images=pil_images)
     labels = fuyu_processor.get_labels(input_ids=model_inputs["input_ids"], special_token_id=71122)

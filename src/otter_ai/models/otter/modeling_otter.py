@@ -1,4 +1,3 @@
-import random
 import sys
 from typing import List, Optional
 
@@ -15,6 +14,7 @@ from ..falcon.modelling_RW import RWForCausalLM
 from ..mpt.modeling_mpt import MPTForCausalLM
 from ..mpt_redpajama.mosaic_gpt import MosaicGPT
 from .configuration_otter import OtterConfig
+import secrets
 
 # The package importlib_metadata is in a different place, depending on the python version.
 if sys.version_info < (3, 8):
@@ -494,7 +494,7 @@ class OtterLMMixin(nn.Module):
         # attend_previous = (
         #     (random.random() < 0.5) if self.use_media_placement_augmentation else False
         # )
-        attend_previous = (random.random() < 0.5) if self.use_media_placement_augmentation else True
+        attend_previous = (secrets.SystemRandom().random() < 0.5) if self.use_media_placement_augmentation else True
         # attend_previous = self.only_attend_previous
 
         if self.__class__.__name__ == "LlamaForCausalLM":

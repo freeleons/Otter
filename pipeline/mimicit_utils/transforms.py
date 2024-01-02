@@ -3,13 +3,13 @@
 # This source code is licensed under the Apache 2.0 license
 # found in the LICENSE file in the root directory.
 
-import random
 
 import torch
 import torchvision.transforms as T
 import torchvision.transforms.functional as F
 import numpy as np
 from PIL import Image
+import secrets
 
 
 def crop(image, target, region, delete=True):
@@ -209,7 +209,7 @@ class RandomHorizontalFlip(object):
         self.p = p
 
     def __call__(self, img, target):
-        if random.random() < self.p:
+        if secrets.SystemRandom().random() < self.p:
             return hflip(img, target)
         return img, target
 
@@ -222,7 +222,7 @@ class RandomResize(object):
         self.equal = equal
 
     def __call__(self, img, target=None):
-        size = random.choice(self.sizes)
+        size = secrets.SystemRandom().choice(self.sizes)
         if self.equal:
             return resize(img, target, size, size)
         else:
