@@ -48,20 +48,20 @@ def get_image(url: str) -> Union[Image.Image, list]:
     if "://" not in url:  # Local file
         content_type = get_content_type(url)
     else:  # Remote URL
-        content_type = requests.head(url, stream=True, verify=False).headers.get("Content-Type")
+        content_type = requests.head(url, stream=True, verify=True).headers.get("Content-Type")
 
     if "image" in content_type:
         if "://" not in url:  # Local file
             return Image.open(url)
         else:  # Remote URL
-            return Image.open(requests.get(url, stream=True, verify=False).raw)
+            return Image.open(requests.get(url, stream=True, verify=True).raw)
     elif "video" in content_type:
         video_path = "temp_video.mp4"
         if "://" not in url:  # Local file
             video_path = url
         else:  # Remote URL
             with open(video_path, "wb") as f:
-                f.write(requests.get(url, stream=True, verify=False).content)
+                f.write(requests.get(url, stream=True, verify=True).content)
         frames = extract_frames(video_path)
         if "://" in url:  # Only remove the temporary video file if it was downloaded
             os.remove(video_path)
