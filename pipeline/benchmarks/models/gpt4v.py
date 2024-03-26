@@ -57,7 +57,7 @@ class OpenAIGPT4Vision(BaseModel):
         retry = True
         retry_times = 0
         while retry and retry_times < 5:
-            response = requests.post("https://api.openai.com/v1/chat/completions", headers=self.headers, json=payload)
+            response = requests.post("https://api.openai.com/v1/chat/completions", headers=self.headers, json=payload, timeout=60)
             if response.status_code == 200:
                 response_data = response.json()
                 return response_data["choices"][0]["message"]["content"]
