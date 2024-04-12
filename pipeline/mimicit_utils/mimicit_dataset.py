@@ -234,8 +234,6 @@ class MimicitDataset(Dataset):
                     loaded_images_path.add(cur_images_path)
                 else:
                     master_print(f"Error: {cur_images_path} is not supported!")
-                    import pdb
-                    pdb.set_trace()
                 del cur_df
 
             self.train_data_list.extend(resampled_train)
@@ -419,9 +417,6 @@ class MimicitDataset(Dataset):
             print(f"instruction_id: {instruction_id}")
             print(f"image_ids: {image_ids}")
             print(f"in_context_example_ids: {in_context_example_ids}")
-            import pdb
-
-            pdb.set_trace()
             exit()
 
         if cur_task_desc != "" and self.args.with_task_description:

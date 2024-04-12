@@ -723,9 +723,7 @@ class FlamingoForConditionalGeneration(FlamingoPreTrainedModel):
             text_tokenizer = AutoTokenizer.from_pretrained(config.text_config._name_or_path)
             lang_encoder = LlamaForCausalLM(config=config.text_config)
         else:
-            import pdb
-
-            pdb.set_trace()
+            pass
         # else:
         #     text_tokenizer = LlamaTokenizer.from_pretrained(config.text_config._name_or_path)
         #     lang_encoder = LlamaForCausalLM(config=config.text_config)

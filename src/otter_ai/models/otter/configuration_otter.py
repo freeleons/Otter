@@ -73,9 +73,7 @@ class OtterConfig(PretrainedConfig):
             elif text_config["architectures"][0] == "LlamaForCausalLM":
                 self.text_config = CONFIG_MAPPING[text_config.pop("model_type")](**text_config)
             else:
-                import pdb
-
-                pdb.set_trace()
+                pass
         else:
             self.text_config = CONFIG_MAPPING[text_config.pop("model_type")](**text_config)
         self.cross_attn_every_n_layers = cross_attn_every_n_layers
