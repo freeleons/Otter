@@ -1,8 +1,8 @@
 import json
-import random
 from typing import List, Dict
 import re
 from abstract_dataset import AbstractDataset
+import secrets
 
 
 class SceneNavigation(AbstractDataset):
@@ -28,7 +28,7 @@ class SceneNavigation(AbstractDataset):
         results = []
         for scene_id, inner_dict in query_inputs.items():
             descriptions = inner_dict["description"]
-            random.shuffle(descriptions)
+            secrets.SystemRandom().shuffle(descriptions)
             formatted_descriptions = [cur_description[1] for cur_description in descriptions[:50]]
             results.append(
                 {
