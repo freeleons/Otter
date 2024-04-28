@@ -1,15 +1,11 @@
 import mimetypes
-import os
-from io import BytesIO
 from typing import Union
-import cv2
 import requests
 import torch
 import transformers
 from PIL import Image
-from torchvision.transforms import Compose, Resize, ToTensor
-from tqdm import tqdm
 import sys
+from security import safe_requests
 
 sys.path.append("../../src")
 
@@ -42,7 +38,7 @@ def get_image(url: str) -> Union[Image.Image, list]:
         if "://" not in url:  # Local file
             return Image.open(url)
         else:  # Remote URL
-            return Image.open(requests.get(url, stream=True, verify=False).raw)
+            return Image.open(safe_requests.get(url, stream=True, verify=False).raw)
     else:
         raise ValueError("Invalid content type. Expected image.")
 
