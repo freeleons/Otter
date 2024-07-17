@@ -5,7 +5,6 @@ import json
 import logging
 import math
 import os
-import random
 import statistics
 import sys
 from dataclasses import dataclass
@@ -23,6 +22,7 @@ from torch.utils.data import ConcatDataset, DataLoader, IterableDataset, RandomS
 from torch.utils.data.distributed import DistributedSampler
 from webdataset.filters import _shuffle
 from webdataset.tariterators import base_plus_ext, tar_file_expander, url_opener, valid_sample
+import secrets
 
 sys.path.append("../..")
 import json
@@ -204,7 +204,7 @@ class detshuffle2(wds.PipelineStage):
             # situation as different workers may wrap at different times (or not at all).
             self.epoch += 1
             epoch = self.epoch
-        rng = random.Random()
+        rng = secrets.SystemRandom().Random()
         if self.seed < 0:
             # If seed is negative, we use the worker's seed, this will be different across all nodes/workers
             seed = pytorch_worker_seed(epoch)
@@ -234,7 +234,7 @@ class ResampledShards2(IterableDataset):
         self.urls = urls
         assert isinstance(self.urls[0], str)
         self.nshards = nshards
-        self.rng = random.Random()
+        self.rng = secrets.SystemRandom().Random()
         self.worker_seed = worker_seed
         self.deterministic = deterministic
         self.epoch = epoch
@@ -358,7 +358,7 @@ def preprocess_interleaved(sample, tokenizer, clip_processor, sim_threshold, dis
 
     if num_images == 0:
         raise ValueError("No images in sample")
-    elif num_images == 1 and random.random() <= 0.5:  # 50% chance of keeping single image samples
+    elif num_images == 1 and secrets.SystemRandom().random() <= 0.5:  # 50% chance of keeping single image samples
         raise ValueError("Only one image in sample")
 
     return (

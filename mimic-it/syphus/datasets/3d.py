@@ -3,9 +3,9 @@ This file contains the implementation of the SceneNavigation and SceneRef and Sc
 """
 
 import json
-import random
 
 from abstract_dataset import AbstractDataset
+import secrets
 
 
 class SceneNavigation(AbstractDataset):
@@ -26,7 +26,7 @@ class SceneNavigation(AbstractDataset):
             # if counter > 7:
             #     break
             descriptions = inner_dict["description"]
-            random.shuffle(descriptions)
+            secrets.SystemRandom().shuffle(descriptions)
             real_descriptions = []
             for cur_description in descriptions[:50]:
                 real_descriptions.append(cur_description[1])

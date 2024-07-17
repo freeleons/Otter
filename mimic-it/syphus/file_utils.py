@@ -7,8 +7,8 @@ import os
 import time
 
 import openai
-import random
 from litellm import completion
+import secrets
 
 engine = os.environ.get("OPENAI_API_ENGINE", "davinci")
 
@@ -23,7 +23,7 @@ def query_gpt(inputs: dict[str], dataset_name: str) -> tuple[dict[str, str], str
     if dataset_name == "3d.SceneNavigation":
         with open("./candidates.txt") as f:
             candidates = f.readlines()
-        cur_candidates = random.sample(candidates, 9)
+        cur_candidates = secrets.SystemRandom().sample(candidates, 9)
         cur_candidates_string = "\n".join(cur_candidates)
     messages = [
         {
