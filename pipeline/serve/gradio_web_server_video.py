@@ -26,6 +26,7 @@ from pipeline.serve.serving_utils import (
 )
 from pipeline.serve.gradio_patch import Chatbot as grChatbot
 from pipeline.serve.gradio_css import code_highlight_css
+from security import safe_requests
 
 CONTROLLER_HEART_BEAT_EXPIRATION = 2 * 60
 WORKER_HEART_BEAT_INTERVAL = 30
@@ -84,14 +85,14 @@ def get_image(url: str) -> Union[Image.Image, list]:
         if "://" not in url:  # Local file
             return Image.open(url)
         else:  # Remote URL
-            return Image.open(requests.get(url, stream=True, verify=False).raw)
+            return Image.open(safe_requests.get(url, stream=True, verify=False).raw)
     elif "video" in content_type:
         video_path = "temp_video.mp4"
         if "://" not in url:  # Local file
             video_path = url
         else:  # Remote URL
             with open(video_path, "wb") as f:
-                f.write(requests.get(url, stream=True, verify=False).content)
+                f.write(safe_requests.get(url, stream=True, verify=False).content)
         frames = extract_frames(video_path)
         if "://" in url:  # Only remove the temporary video file if it was downloaded
             os.remove(video_path)
