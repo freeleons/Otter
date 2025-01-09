@@ -78,20 +78,20 @@ def get_image(url: str) -> Union[Image.Image, list]:
     if "://" not in url:  # Local file
         content_type = get_content_type(url)
     else:  # Remote URL
-        content_type = requests.head(url, stream=True, verify=False).headers.get("Content-Type")
+        content_type = requests.head(url, stream=True, verify=False, timeout=60).headers.get("Content-Type")
 
     if "image" in content_type:
         if "://" not in url:  # Local file
             return Image.open(url)
         else:  # Remote URL
-            return Image.open(requests.get(url, stream=True, verify=False).raw)
+            return Image.open(requests.get(url, stream=True, verify=False, timeout=60).raw)
     elif "video" in content_type:
         video_path = "temp_video.mp4"
         if "://" not in url:  # Local file
             video_path = url
         else:  # Remote URL
             with open(video_path, "wb") as f:
-                f.write(requests.get(url, stream=True, verify=False).content)
+                f.write(requests.get(url, stream=True, verify=False, timeout=60).content)
         frames = extract_frames(video_path)
         if "://" in url:  # Only remove the temporary video file if it was downloaded
             os.remove(video_path)
@@ -107,9 +107,9 @@ def get_conv_log_filename():
 
 
 def get_model_list():
-    ret = requests.post(args.controller_url + "/refresh_all_workers")
+    ret = requests.post(args.controller_url + "/refresh_all_workers", timeout=60)
     assert ret.status_code == 200
-    ret = requests.post(args.controller_url + "/list_models")
+    ret = requests.post(args.controller_url + "/list_models", timeout=60)
     models = ret.json()["models"]
     models.sort(key=lambda x: priority.get(x, x))
     logger.info(f"Models: {models}")
@@ -322,7 +322,7 @@ def http_bot(
         state = new_state
 
     controller_url = args.controller_url
-    ret = requests.post(controller_url + "/get_worker_address", json={"model": model_name})
+    ret = requests.post(controller_url + "/get_worker_address", json={"model": model_name}, timeout=60)
     worker_addr = ret.json()["address"]
     logger.info(f"model_name: {model_name}, worker_addr: {worker_addr}")
 

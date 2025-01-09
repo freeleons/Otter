@@ -201,7 +201,7 @@ def http_bot(image_input, text_input, request: gr.Request):
     url = "http://10.128.0.40:8890/app/otter"
     headers = {"Content-Type": "application/json"}
 
-    response = requests.post(url, headers=headers, data=json.dumps(payload))
+    response = requests.post(url, headers=headers, data=json.dumps(payload), timeout=60)
     results = response.json()
     print("response: ", {"result": results["result"]})
 

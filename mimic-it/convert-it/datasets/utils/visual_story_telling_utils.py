@@ -37,7 +37,7 @@ def download_single_image(image: dict[str]) -> tuple[str, bytes]:
     url = get_url(image)
     id = image["id"]
     try:
-        pic = requests.get(url)
+        pic = requests.get(url, timeout=60)
         return id, resize_image(pic.content)
     except:
         return id, None
