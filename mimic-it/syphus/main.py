@@ -14,6 +14,7 @@ from file_utils import (
     format_output,
     query_gpt,
 )
+import secrets
 
 
 def task(inputs: Dict[str, Union[str, Dict[str, Union[str, int]]]]) -> Dict[str, Union[Dict[str, int], List[str]]]:
@@ -58,9 +59,8 @@ if __name__ == "__main__":
     dataset_name = args.name
     dataset = list(dataset)
     if args.random_sample:
-        import random
 
-        random.shuffle(dataset)
+        secrets.SystemRandom().shuffle(dataset)
     if args.slice_end > 0:
         dataset = dataset[args.slice_start : args.slice_end]
     results = []
