@@ -4,6 +4,7 @@ from typing import Union
 
 import requests
 from PIL import Image
+from security import safe_requests
 
 requests.packages.urllib3.disable_warnings()
 
@@ -31,6 +32,6 @@ def get_image(url: str) -> Union[Image.Image, list]:
         if "://" not in url:  # Local file
             return Image.open(url)
         else:  # Remote URL
-            return Image.open(requests.get(url, stream=True, verify=False).raw)
+            return Image.open(safe_requests.get(url, stream=True, verify=False).raw)
     else:
         raise ValueError("Invalid content type. Expected image.")

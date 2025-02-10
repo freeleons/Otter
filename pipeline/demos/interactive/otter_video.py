@@ -7,6 +7,7 @@ import torch
 import transformers
 from PIL import Image
 import sys
+from security import safe_requests
 
 sys.path.append("../../src")
 # make sure you can properly access the otter folder
@@ -54,14 +55,14 @@ def get_image(url: str) -> Union[Image.Image, list]:
         if "://" not in url:  # Local file
             return Image.open(url)
         else:  # Remote URL
-            return Image.open(requests.get(url, stream=True, verify=False).raw)
+            return Image.open(safe_requests.get(url, stream=True, verify=False).raw)
     elif "video" in content_type:
         video_path = "temp_video.mp4"
         if "://" not in url:  # Local file
             video_path = url
         else:  # Remote URL
             with open(video_path, "wb") as f:
-                f.write(requests.get(url, stream=True, verify=False).content)
+                f.write(safe_requests.get(url, stream=True, verify=False).content)
         frames = extract_frames(video_path)
         if "://" in url:  # Only remove the temporary video file if it was downloaded
             os.remove(video_path)
