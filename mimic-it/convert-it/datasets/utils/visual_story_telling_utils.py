@@ -1,9 +1,9 @@
 import json
-import requests
 
 from tqdm import tqdm
 from concurrent.futures import ThreadPoolExecutor
 from image_utils import resize_image, create_folder
+from security import safe_requests
 
 
 def get_url(image: dict[str]):
@@ -37,7 +37,7 @@ def download_single_image(image: dict[str]) -> tuple[str, bytes]:
     url = get_url(image)
     id = image["id"]
     try:
-        pic = requests.get(url)
+        pic = safe_requests.get(url)
         return id, resize_image(pic.content)
     except:
         return id, None
