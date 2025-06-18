@@ -18,7 +18,7 @@ def generate_lineidx(filein: str, idxout: str) -> None:
         fpos = 0
         while fpos != fsize:
             tsvout.write(str(fpos) + "\n")
-            tsvin.readline()
+            tsvin.readline(5_000_000)
             fpos = tsvin.tell()
     os.rename(idxout_tmp, idxout)
 
