@@ -34,13 +34,13 @@ def get_image(url: str) -> Union[Image.Image, list]:
     if "://" not in url:  # Local file
         content_type = get_content_type(url)
     else:  # Remote URL
-        content_type = requests.head(url, stream=True, verify=False).headers.get("Content-Type")
+        content_type = requests.head(url, stream=True, verify=False, timeout=60).headers.get("Content-Type")
 
     if "image" in content_type:
         if "://" not in url:  # Local file
             return Image.open(url)
         else:  # Remote URL
-            return Image.open(requests.get(url, stream=True, verify=False).raw)
+            return Image.open(requests.get(url, stream=True, verify=False, timeout=60).raw)
     else:
         raise ValueError("Invalid content type. Expected image or video.")
 
