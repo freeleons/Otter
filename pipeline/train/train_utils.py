@@ -1,5 +1,4 @@
 import os
-import random
 import subprocess
 import sys
 from contextlib import suppress
@@ -8,6 +7,7 @@ import numpy as np
 import torch
 from torch.utils.data.distributed import DistributedSampler
 import torch.distributed as dist
+import secrets
 
 try:
     from transformers.models.idefics.processing_idefics import image_attention_mask_for_packed_input_ids, incremental_to_binary_attention_mask
@@ -33,7 +33,7 @@ def master_print(*args, **kwargs):
 def random_seed(seed=42, rank=0):
     torch.manual_seed(seed + rank)
     np.random.seed(seed + rank)
-    random.seed(seed + rank)
+    secrets.SystemRandom().seed(seed + rank)
 
 
 def get_cast_dtype(precision: str):
