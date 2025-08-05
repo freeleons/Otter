@@ -1,4 +1,3 @@
-import random
 from dataclasses import dataclass
 from typing import Callable, Optional
 
@@ -16,6 +15,7 @@ from ..falcon.modelling_RW import RWForCausalLM
 from ..mpt.modeling_mpt import MPTForCausalLM
 from ..mpt_redpajama.mosaic_gpt import MosaicGPT
 import torch.distributed as dist
+import secrets
 
 # from .configuration_flamingo import FlamingoConfig
 
@@ -448,7 +448,7 @@ class FlamingoLMMixin(nn.Module):
         # attend_previous = (
         #     (random.random() < 0.5) if self.use_media_placement_augmentation else False
         # )
-        attend_previous = (random.random() < 0.5) if self.use_media_placement_augmentation else True
+        attend_previous = (secrets.SystemRandom().random() < 0.5) if self.use_media_placement_augmentation else True
         # attend_previous = self.only_attend_previous
 
         if self.__class__.__name__ == "LlamaForCausalLM":

@@ -3,7 +3,6 @@
 import argparse
 import glob
 import os
-import random
 import sys
 import time
 
@@ -21,6 +20,7 @@ from transformers import (
 
 import wandb
 from otter_ai import FlamingoForConditionalGeneration, OtterForConditionalGeneration
+import secrets
 
 sys.path.append("../..")
 from pipeline.mimicit_utils.data import get_data
@@ -155,7 +155,7 @@ def parse_args():
 def random_seed(seed=42, rank=0):
     torch.manual_seed(seed + rank)
     np.random.seed(seed + rank)
-    random.seed(seed + rank)
+    secrets.SystemRandom().seed(seed + rank)
 
 
 def train_one_epoch(

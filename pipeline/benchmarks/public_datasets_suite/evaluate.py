@@ -2,7 +2,6 @@ import argparse
 import importlib
 import json
 import os
-import random
 import uuid
 from collections import defaultdict
 
@@ -35,6 +34,7 @@ from .ok_vqa_utils import postprocess_ok_vqa_generation
 from .vqa_metric import compute_vqa_accuracy, postprocess_vqa_generation
 
 from pipeline.train.distributed import init_distributed_device, world_info_from_env
+import secrets
 
 parser = argparse.ArgumentParser()
 
@@ -618,7 +618,7 @@ def prepare_eval_samples(test_dataset, num_samples, batch_size, seed):
 
 
 def sample_batch_demos_from_query_set(query_set, num_samples, batch_size):
-    return [random.sample(query_set, num_samples) for _ in range(batch_size)]
+    return [secrets.SystemRandom().sample(query_set, num_samples) for _ in range(batch_size)]
 
 
 def compute_effective_num_shots(num_shots, model_type):
